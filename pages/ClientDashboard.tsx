@@ -15,12 +15,11 @@ export const ClientDashboard: React.FC = () => {
   
   // Generator State
   const [selectedModel, setSelectedModel] = useState<ScriptModel | null>(null);
-  const [userInput, setUserInput] = useState<UserInput>({ topic: '', tone: 'Energético', additionalInfo: '', dynamicFields: {} });
+  const [userInput, setUserInput] = useState<UserInput>({ topic: '', dynamicFields: {} });
   const [isGenerating, setIsGenerating] = useState(false);
   const [result, setResult] = useState<string | null>(null);
   const [generationError, setGenerationError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [templateCopied, setTemplateCopied] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -77,20 +76,6 @@ export const ClientDashboard: React.FC = () => {
     }
   };
 
-  const handleCopyTemplate = () => {
-    if (selectedModel?.promptTemplate) {
-      navigator.clipboard.writeText(selectedModel.promptTemplate);
-      setTemplateCopied(true);
-      setTimeout(() => setTemplateCopied(false), 2000);
-    }
-  };
-
-  const handleUseTemplate = () => {
-    if (selectedModel?.promptTemplate) {
-      setUserInput({ ...userInput, topic: selectedModel.promptTemplate });
-    }
-  };
-
   const handleDownload = (script: GeneratedScript) => {
     const element = document.createElement("a");
     const file = new Blob([script.content], {type: 'text/plain'});
@@ -114,7 +99,7 @@ export const ClientDashboard: React.FC = () => {
     setSelectedModel(null);
     setResult(null);
     setGenerationError(null);
-    setUserInput({ topic: '', tone: 'Energético', additionalInfo: '', dynamicFields: {} });
+    setUserInput({ topic: '', dynamicFields: {} });
   };
 
   // --- RENDER: GENERATOR VIEW (SELECTED MODEL) ---
@@ -143,39 +128,6 @@ export const ClientDashboard: React.FC = () => {
 
               <p className="text-sm text-slate-400 mb-6">{selectedModel.description}</p>
               
-              {/* PROMPT TEMPLATE COPY AREA */}
-              {selectedModel.promptTemplate && (
-                <div className="mb-6">
-                  <div className="flex justify-between items-center mb-2">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Template de Pedido</label>
-                    <div className="flex space-x-2">
-                      <button 
-                        type="button"
-                        onClick={handleUseTemplate}
-                        className="text-xs flex items-center bg-fox-600/10 text-fox-500 hover:bg-fox-600/20 px-2 py-1 rounded transition-colors"
-                        title="Preencher automaticamente no campo abaixo"
-                      >
-                        <ArrowDown className="w-3 h-3 mr-1" /> Usar
-                      </button>
-                      <button 
-                        type="button"
-                        onClick={handleCopyTemplate}
-                        className="text-xs flex items-center bg-slate-800 text-slate-300 hover:bg-slate-700 px-2 py-1 rounded transition-colors"
-                      >
-                        {templateCopied ? <Check className="w-3 h-3 mr-1" /> : <Copy className="w-3 h-3 mr-1" />}
-                        {templateCopied ? 'Copiado' : 'Copiar'}
-                      </button>
-                    </div>
-                  </div>
-                  <div className="bg-slate-950 border border-slate-800 rounded-lg p-3 relative group">
-                    <pre className="text-xs text-slate-400 font-mono whitespace-pre-wrap break-words">{selectedModel.promptTemplate}</pre>
-                  </div>
-                  <p className="text-[10px] text-slate-600 mt-1">
-                    Copie o template acima, cole abaixo e preencha as informações.
-                  </p>
-                </div>
-              )}
-
               <form onSubmit={handleGenerate} className="space-y-4">
                 {/* DYNAMIC FIELDS RENDERER */}
                 {selectedModel.fields && selectedModel.fields.length > 0 ? (
@@ -225,36 +177,6 @@ export const ClientDashboard: React.FC = () => {
                     />
                   </div>
                 )}
-                
-                <div className="grid grid-cols-1 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">Tom de Voz</label>
-                    <select
-                      value={userInput.tone}
-                      onChange={e => setUserInput({...userInput, tone: e.target.value})}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-white focus:border-fox-500 outline-none"
-                    >
-                      <option>Energético</option>
-                      <option>Profissional</option>
-                      <option>Engraçado</option>
-                      <option>Inspirador</option>
-                      <option>Sério</option>
-                      <option>Casual</option>
-                      <option>Polêmico</option>
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">Obs. Extras (Opcional)</label>
-                    <input
-                      type="text"
-                      value={userInput.additionalInfo}
-                      onChange={e => setUserInput({...userInput, additionalInfo: e.target.value})}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-white focus:border-fox-500 outline-none text-sm"
-                      placeholder="Ex: Não use gírias, cite 'Link na Bio'..."
-                    />
-                  </div>
-                </div>
 
                 <button
                   type="submit"

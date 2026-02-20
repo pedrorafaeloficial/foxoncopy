@@ -37,7 +37,5 @@ export type ViewState = 'LANDING' | 'LOGIN' | 'ADMIN_DASHBOARD' | 'CLIENT_DASHBO
 
 export interface UserInput {
   topic: string;
-  tone: string;
-  additionalInfo: string;
   dynamicFields?: Record<string, string>;
 }

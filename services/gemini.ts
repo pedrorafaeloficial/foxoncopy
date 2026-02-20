@@ -31,10 +31,10 @@ export const generateScript = async (model: ScriptModel, input: UserInput): Prom
     }
 
     // Add common fields
-    prompt += `\nTom Desejado: ${input.tone}\n`;
-    if (input.additionalInfo) {
-      prompt += `Detalhes Adicionais: ${input.additionalInfo}\n`;
-    }
+    // prompt += `\nTom Desejado: ${input.tone}\n`; // Removed per user request
+    // if (input.additionalInfo) {
+    //   prompt += `Detalhes Adicionais: ${input.additionalInfo}\n`;
+    // }
 
     prompt += `\nPor favor, escreva um roteiro completo de vídeo curto (Shorts/Reels) em PORTUGUÊS baseado nas instruções do sistema fornecidas.`;
 
