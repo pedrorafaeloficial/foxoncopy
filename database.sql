@@ -37,6 +37,10 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='models' AND column_name='prompt_template') THEN 
         ALTER TABLE models ADD COLUMN prompt_template TEXT; 
     END IF;
+    
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='models' AND column_name='fields') THEN 
+        ALTER TABLE models ADD COLUMN fields JSONB; 
+    END IF;
 END $$;
 
 -- 4. Tabela de Histórico
